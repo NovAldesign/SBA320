@@ -1,16 +1,40 @@
-# React + Vite
+* Project Concept
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Grown Folks Collective is a web application built to facilitate genuine human connection. Targeted at entrepreneurs aged 35 and older, the platform aims to combat social isolation by providing a curated list of in-person gatherings.
 
-Currently, two official plugins are available:
+Unlike standard networking events, GFC focuses on thought-provoking conversations and building lasting friendships. As the founder, I host every event to ensure a high-touch, engaging experience for every attendee.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* Technologies Used:
 
-## React Compiler
+- React.js (Vite): Chosen for its fast development cycle and efficient component-based architecture.
+- Eventbrite API (v3): Integrated to pull real-time event data directly from my organization’s dashboard.
+- React Router: Implemented to create a seamless Single Page Application (SPA) experience between the Home and Events views.
+- CSS3 (Flexbox/Grid): Used to create a responsive, premium "Navy and Gold" aesthetic that appeals to a mature demographic.
+- Dotenv (.env): Utilized to securely manage the private API token and prevent sensitive data from being pushed to GitHub.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* The Approach Taken
+I used Data Logic and User Intent:
 
-## Expanding the ESLint configuration
+- Security First: I started by abstracting the API token into a .env file to follow industry best practices for security.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- API: Because Eventbrite has deprecated certain endpoints, I implemented a two-step fetch: first retrieving the Organization ID, then using that ID to pull the specific event list.
+
+- Temporal Filtering: To improve UX, I wrote logic using the JavaScript Date() object to separate events. This ensures users see Upcoming events first, while Past events are moved to a "Previous Gatherings" section to provide social proof without cluttering the main view.
+
+* Usage Instructions
+- Clone the repository.
+
+- Run npm install to download all necessary dependencies.
+
+- Create a .env file in the root folder and add your private token: In the comments on my SBA320 submission link.
+
+- Run npm run dev to launch the development server.
+
+- Navigate to the Events page to see the live-synced GFC gatherings.
+
+* Unsolved Problems & Future Enhancements
+- Image Integration: Currently, the event cards pull text data. A future enhancement would be to map the logo.url from   Eventbrite to show the specific cover image for each retreat.
+
+- Member Login: I intend to add a Firebase authentication layer so that 35+ members can create profiles and "favorite" events they plan to attend.
+
+- Business Travel Module: Adding a dedicated section for "Travel" by adding the FORA api, for people to book their group trip. I willl also add a member login and admin login.
