@@ -1,88 +1,91 @@
-import React, { useState, useEffect } from 'react';
-import './Events.css';
+import React, { useState, useEffect } from "react";
+import "./Events.css";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const AUTH_TOKEN = import.meta.env.VITE_EVENTBRITE_TOKEN;
+
+  // --- FILTERING EVENTS ---
+
+  const now = new Date();
   
-  // Using the Vite environment variable
-  const AUTH_TOKEN = import.meta.env.VITE_EVENTBRITE_TOKEN; 
+  const upcomingEvents = events
+    .filter((event) => new Date(event.start.local) >= now)
+    .sort((a, b) => new Date(a.start.local) - new Date(b.start.local));
+
+  const pastEvents = events
+    .filter((event) => new Date(event.start.local) < now)
+    .sort((a, b) => new Date(b.start.local) - new Date(a.start.local));
 
   useEffect(() => {
-  if (!AUTH_TOKEN) return;
+    if (!AUTH_TOKEN) return;
 
-  // Step 1: Get your Organization ID first
-  fetch(`https://www.eventbriteapi.com/v3/users/me/organizations/?token=${AUTH_TOKEN}`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("GFC Organization Data:", data);
-      
-      // Pull the ID from the first organization in the list
-      if (data.organizations && data.organizations.length > 0) {
-        const orgId = data.organizations[0].id;
-        console.log("Found Org ID:", orgId);
-
-        // Step 2: Use that ID to get the events
-        return fetch(`https://www.eventbriteapi.com/v3/organizations/${orgId}/events/?token=${AUTH_TOKEN}`);
-      } else {
-        throw new Error("No organizations found for this account.");
-      }
-    })
-    .then(res => res.json())
-    .then(eventData => {
-      if (eventData.events) {
-        setEvents(eventData.events);
-      }
-      setLoading(false);
-    })
-    .catch(err => {
-      console.error("GFC API Error:", err);
-      setLoading(false);
-    });
-}, [AUTH_TOKEN])
-
-  useEffect(() => {
-    if (!loading && events.length === 0) {
-      setEvents([
-        {
-          id: 'mock1',
-          name: { text: 'GFC Business Strategy Retreat' },
-          start: { local: '2026-05-20T09:00:00' },
-          url: 'https://www.eventbrite.com'
-        },
-        {
-          id: 'mock2',
-          name: { text: 'Faceless Content Mastery' },
-          start: { local: '2026-06-12T13:00:00' },
-          url: 'https://www.eventbrite.com'
+    fetch(`https://www.eventbriteapi.com/v3/users/me/organizations/?token=${AUTH_TOKEN}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.organizations && data.organizations.length > 0) {
+          const orgId = data.organizations[0].id;
+          return fetch(`https://www.eventbriteapi.com/v3/organizations/${orgId}/events/?token=${AUTH_TOKEN}`);
         }
-      ]);
-    }
-  }, [loading, events.length]);
+        throw new Error("No organizations found.");
+      })
+      .then((res) => res.json())
+      .then((eventData) => {
+        if (eventData.events) setEvents(eventData.events);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("GFC API Error:", err);
+        setLoading(false);
+      });
+  }, [AUTH_TOKEN]);
 
   return (
     <div className="container page-content">
       <header className="events-header">
         <h1>Grown Folks Collective Events</h1>
-        <p>Purchase your event tickets to attend our next social networking event.</p>
+        <p>Join our next gathering for 35+ professionals seeking genuine connection.</p>
       </header>
 
       {loading ? (
-        <div className="loader">Getting the latest sessions...</div>
+        <div className="loader">Syncing the latest connections...</div>
       ) : (
-        <div className="events-grid">
-          {events.map((item) => (
-            <div key={item.id} className="event-card">
-              <h3>{item.name.text}</h3>
-              <p className="date">
-                {new Date(item.start.local).toLocaleDateString()}
-              </p>
-              <a href={item.url} className="btn" target="_blank" rel="noopener noreferrer">
-                Save My Spot
-              </a>
-            </div>
-          ))}
-        </div>
+        <>
+          {/* UPCOMING SECTION */}
+          <div className="events-grid">
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((item) => (
+                <div key={item.id} className="event-card upcoming">
+                  <h3>{item.name.text}</h3>
+                  <p className="date">{new Date(item.start.local).toLocaleDateString()}</p>
+                  <a href={item.url} className="btn" target="_blank" rel="noopener noreferrer">
+                    Save My Spot
+                  </a>
+                </div>
+              ))
+            ) : (
+              <p className="no-events">No upcoming events. Check back soon for new connections!</p>
+            )}
+          </div>
+
+          {/* PAST EVENTS SECTION */}
+          {pastEvents.length > 0 && (
+            <section className="past-events-section">
+              <hr className="divider" />
+              <h2 className="past-title">Previous Gatherings</h2>
+              <div className="events-grid past-grid">
+                {pastEvents.map((item) => (
+                  <div key={item.id} className="event-card past-card">
+                    <h3>{item.name.text}</h3>
+                    <p className="date">{new Date(item.start.local).toLocaleDateString()}</p>
+                    <button className="btn-disabled" disabled>Connection Concluded</button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

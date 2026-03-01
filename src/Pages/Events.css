@@ -55,3 +55,38 @@
   color: #666;
   font-weight: bold;
 }
+
+/* Past Events Styling */
+.past-events-section {
+  margin-top: 60px;
+  opacity: 0.7; /* Makes it look slightly faded */
+}
+
+.past-title {
+  text-align: center;
+  color: #010079;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+}
+
+.past-card {
+  filter: grayscale(0.5); /* Desaturates the card */
+  border-top: 4px solid #ccc !important; /* Grey instead of Gold */
+}
+
+.btn-disabled {
+  background-color: #eee;
+  color: #888;
+  border: none;
+  padding: 10px 20px;
+  cursor: not-allowed;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #d4af37, transparent);
+  margin-bottom: 40px;
+}
