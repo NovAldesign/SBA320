@@ -13,3 +13,9 @@ html, body {
   padding: 0;
   overflow-x: hidden; 
 }
+
+.container {
+  padding-left: 10%;
+  padding-right: 10%;
+
+}
