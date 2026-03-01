@@ -19,3 +19,20 @@ html, body {
   padding-right: 10%;
 
 }
+
+.page-content {
+  padding-top: 100px; 
+  text-align: center;
+  min-height: 100vh;
+}
+
+.events-header h1 {
+  color: #002147;
+  margin-bottom: 20px;
+}
+
+#root {
+  display: block !important;
+  min-height: 100vh;
+  background-color: white; 
+}
